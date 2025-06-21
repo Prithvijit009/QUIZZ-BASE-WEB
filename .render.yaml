@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: best-friend-quiz
+    env: python
+    buildCommand: ""
+    startCommand: python backend/app.py

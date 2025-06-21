@@ -1,0 +1,28 @@
+<!-- frontend/create.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Your Quiz</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h2>📚 Create Your Best Friend Quiz</h2>
+    <form id="quizForm">
+      <div id="questionsContainer"></div>
+
+      <button type="button" onclick="addQuestion()">➕ Add Question</button>
+      <br><br>
+      <button type="submit">✅ Create Quiz</button>
+    </form>
+
+    <div id="quizLink" style="display:none;">
+      <h3>🎉 Your Quiz Link:</h3>
+      <a id="linkOutput" href="#" target="_blank"></a>
+    </div>
+  </div>
+
+  <script src="create.js"></script>
+</body>
+</html>

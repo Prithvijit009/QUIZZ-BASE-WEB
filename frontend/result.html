@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quiz Result</title>
+  <link rel="stylesheet" href="result.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Quiz Completed!</h1>
+    <p id="scoreText">Calculating your score...</p>
+    <p class="msg">Thank you for playing this Best Friend Quiz 💙</p>
+  </div>
+
+  <script>
+    // Read score from URL (e.g. result.html?score=7)
+    const urlParams = new URLSearchParams(window.location.search);
+    const score = urlParams.get("score") || 0;
+    document.getElementById("scoreText").innerText = `You got ${score} out of 10 correct!`;
+  </script>
+</body>
+</html>
